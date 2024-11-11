@@ -104,7 +104,7 @@ return {
     opts = {
       keymaps = {
         accept_suggestion = "<C-y>",
-        clear_suggestion = "Escape",
+        clear_suggestion = "<C-e>",
       },
       log_level = "warn",
       disable_inline_completion = false, -- disables inline completion for use with cmp

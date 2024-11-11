@@ -7,7 +7,7 @@ require("gitsigns").setup {
     delay = 0,
     ignore_whitespace = false,
   },
-  current_line_blame_formatter = "<author> (<author_time:%R>) -  <summary>",
+  current_line_blame_formatter = "      <author>, <author_time:%R> (<summary>)",
 }
 require("ibl").setup {
   scope = { enabled = false },
