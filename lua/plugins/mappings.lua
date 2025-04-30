@@ -8,8 +8,18 @@ return {
           ["<leader>fw"] = { function() require("telescope").extensions.live_grep_args.live_grep_args() end },
           ["<S-l>"] = { function() require("astrocore.buffer").nav(vim.v.count > 0 and vim.v.count or 1) end },
           ["<S-h>"] = { function() require("astrocore.buffer").nav(-(vim.v.count > 0 and vim.v.count or 1)) end },
-          ["<leader>x"] = { function() require("astrocore.buffer").close() end },
-          ["<leader>aa"] = { function() require("harpoon.mark").add_file() end },
+          ["<leader>x"] = {
+            function() require("astrocore.buffer").close() end,
+            desc = "Close buffer",
+            noremap = true,
+            nowait = true, -- This is the key setting to remove delay
+          },
+
+          -- Remove the conflicting mappings
+          ["<leader>xl"] = false,
+          ["<leader>xq"] = false,
+
+          ["<leader>ap"] = { function() require("harpoon.mark").add_file() end },
           ["<leader>am"] = { function() require("harpoon.ui").toggle_quick_menu() end },
           ["<leader>1"] = function() require("harpoon.ui").nav_file(1) end,
           ["<leader>2"] = function() require("harpoon.ui").nav_file(2) end,
@@ -34,11 +44,11 @@ return {
           ["<leader>c"] = "",
           ["-"] = function() require("oil").open_float() end,
         },
-        v = {
-          ["J"] = { ":m '>+1<CR>gv=gv" },
-          ["K"] = { ":m '<-2<CR>gv=gv" },
-          ["D"] = { "_D" },
-        },
+        -- v = {
+        --   ["J"] = { ":m '>+1<CR>gv=gv" },
+        --   ["K"] = { ":m '<-2<CR>gv=gv" },
+        --   ["D"] = { "_D" },
+        -- },
         t = {
           -- setting a mapping to false will disable it
           -- ["<esc>"] = false,
@@ -106,7 +116,7 @@ return {
               local M = {}
               local delta = previewers.new_termopen_previewer {
                 get_command = function(entry)
-                  if entry.status == "??" or "A " then
+                  if entry.status == "??" or entry.status == "A " then
                     return {
                       "git",
                       "-c",
@@ -116,9 +126,13 @@ return {
                       "-c",
                       "delta.line-numbers=true",
                       "diff",
+                      -- "HEAD",
+                      "--",
+                      "/dev/null",
                       entry.path,
                     }
                   end
+
                   return {
                     "git",
                     "-c",
@@ -128,7 +142,9 @@ return {
                     "-c",
                     "delta.line-numbers=true",
                     "diff",
-                    entry.path .. "^!",
+                    "HEAD",
+                    "--",
+                    entry.path,
                   }
                 end,
               }

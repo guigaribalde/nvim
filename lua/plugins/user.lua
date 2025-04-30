@@ -98,79 +98,79 @@ return {
     },
     event = "User AstroFile",
   },
-  {
-    "supermaven-inc/supermaven-nvim",
-    event = "VeryLazy",
-    opts = {
-      keymaps = {
-        accept_suggestion = "<C-y>",
-        clear_suggestion = "<C-e>",
-      },
-      log_level = "warn",
-      disable_inline_completion = false, -- disables inline completion for use with cmp
-      disable_keymaps = false, -- disables built in keymaps for more manual control
-    },
-  },
-  {
-    "stevearc/oil.nvim",
-    event = "VeryLazy",
-    enabled = true,
-    cmd = "Oil",
-    config = function()
-      require("oil").setup {
-        default_file_explorer = false,
-        buf_options = {
-          buflisted = false,
-          bufhidden = "delete",
-        },
-        skip_confirm_for_simple_edits = true,
-        view_options = {
-          show_hidden = true,
-        },
-
-        float = {
-          -- Padding around the floating window
-          padding = 10,
-          max_width = 100,
-          max_height = 0,
-          border = "rounded",
-          win_options = {
-            winblend = 0,
-          },
-          -- preview_split: Split direction: "auto", "left", "right", "above", "below".
-          preview_split = "auto",
-          -- This is the config that will be passed to nvim_open_win.
-          -- Change values here to customize the layout
-          override = function(conf) return conf end,
-        },
-        -- Configuration for the actions floating preview window
-        preview = {
-          -- Width dimensions can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
-          -- min_width and max_width can be a single value or a list of mixed integer/float types.
-          -- max_width = {100, 0.8} means "the lesser of 100 columns or 80% of total"
-          max_width = 0.9,
-          -- min_width = {40, 0.4} means "the greater of 40 columns or 40% of total"
-          min_width = { 40, 0.4 },
-          -- optionally define an integer/float for the exact width of the preview window
-          width = nil,
-          -- Height dimensions can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
-          -- min_height and max_height can be a single value or a list of mixed integer/float types.
-          -- max_height = {80, 0.9} means "the lesser of 80 columns or 90% of total"
-          max_height = 0.9,
-          -- min_height = {5, 0.1} means "the greater of 5 columns or 10% of total"
-          min_height = { 5, 0.1 },
-          -- optionally define an integer/float for the exact height of the preview window
-          height = nil,
-          border = "rounded",
-          win_options = {
-            winblend = 0,
-          },
-          -- Whether the preview window is automatically updated when the cursor is moved
-          update_on_cursor_moved = true,
-        },
-      }
-    end,
-  },
+  -- {
+  --   "supermaven-inc/supermaven-nvim",
+  --   event = "VeryLazy",
+  --   opts = {
+  --     keymaps = {
+  --       accept_suggestion = "<C-y>",
+  --       clear_suggestion = "<C-e>",
+  --     },
+  --     log_level = "warn",
+  --     disable_inline_completion = false, -- disables inline completion for use with cmp
+  --     disable_keymaps = false, -- disables built in keymaps for more manual control
+  --   },
+  -- },
+  -- {
+  --   "stevearc/oil.nvim",
+  --   event = "VeryLazy",
+  --   enabled = true,
+  --   cmd = "Oil",
+  --   config = function()
+  --     require("oil").setup {
+  --       default_file_explorer = false,
+  --       buf_options = {
+  --         buflisted = false,
+  --         bufhidden = "delete",
+  --       },
+  --       skip_confirm_for_simple_edits = true,
+  --       view_options = {
+  --         show_hidden = true,
+  --       },
+  --
+  --       float = {
+  --         -- Padding around the floating window
+  --         padding = 10,
+  --         max_width = 100,
+  --         max_height = 0,
+  --         border = "rounded",
+  --         win_options = {
+  --           winblend = 0,
+  --         },
+  --         -- preview_split: Split direction: "auto", "left", "right", "above", "below".
+  --         preview_split = "auto",
+  --         -- This is the config that will be passed to nvim_open_win.
+  --         -- Change values here to customize the layout
+  --         override = function(conf) return conf end,
+  --       },
+  --       -- Configuration for the actions floating preview window
+  --       preview = {
+  --         -- Width dimensions can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
+  --         -- min_width and max_width can be a single value or a list of mixed integer/float types.
+  --         -- max_width = {100, 0.8} means "the lesser of 100 columns or 80% of total"
+  --         max_width = 0.9,
+  --         -- min_width = {40, 0.4} means "the greater of 40 columns or 40% of total"
+  --         min_width = { 40, 0.4 },
+  --         -- optionally define an integer/float for the exact width of the preview window
+  --         width = nil,
+  --         -- Height dimensions can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
+  --         -- min_height and max_height can be a single value or a list of mixed integer/float types.
+  --         -- max_height = {80, 0.9} means "the lesser of 80 columns or 90% of total"
+  --         max_height = 0.9,
+  --         -- min_height = {5, 0.1} means "the greater of 5 columns or 10% of total"
+  --         min_height = { 5, 0.1 },
+  --         -- optionally define an integer/float for the exact height of the preview window
+  --         height = nil,
+  --         border = "rounded",
+  --         win_options = {
+  --           winblend = 0,
+  --         },
+  --         -- Whether the preview window is automatically updated when the cursor is moved
+  --         update_on_cursor_moved = true,
+  --       },
+  --     }
+  --   end,
+  -- },
   {
     "mg979/vim-visual-multi",
     branch = "master",
@@ -183,6 +183,8 @@ return {
   },
   {
     "yetone/avante.nvim",
+    event = "VeryLazy",
+    lazy = false,
     build = ":AvanteBuild",
     cmd = {
       "AvanteAsk",
@@ -198,6 +200,61 @@ return {
       "stevearc/dressing.nvim",
       "nvim-lua/plenary.nvim",
       "MunifTanjim/nui.nvim",
+      "nvim-treesitter/nvim-treesitter",
+      --- The below dependencies are optional,
+      "echasnovski/mini.pick", -- for file_selector provider mini.pick
+      "nvim-telescope/telescope.nvim", -- for file_selector provider telescope
+      "hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
+      "ibhagwan/fzf-lua", -- for file_selector provider fzf
+      "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
+      { -- if copilot.lua is available, default to copilot provider
+        "zbirenbaum/copilot.lua",
+        optional = true,
+        specs = {
+          {
+            "yetone/avante.nvim",
+            opts = {
+              provider = "copilot",
+              auto_suggestions_provider = "copilot",
+            },
+          },
+        },
+      },
+      {
+        "MeanderingProgrammer/render-markdown.nvim",
+        optional = true,
+        ft = { "markdown", "Avante" },
+        opts = function(_, opts)
+          if not opts.file_types then opts.file_types = { "markdown" } end
+          opts.file_types = require("astrocore").list_insert_unique(opts.file_types, { "Avante" })
+        end,
+      },
+      {
+        -- make sure `Avante` is added as a filetype
+        "OXY2DEV/markview.nvim",
+        optional = true,
+        opts = function(_, opts)
+          if not opts.filetypes then opts.filetypes = { "markdown", "quarto", "rmd" } end
+          opts.filetypes = require("astrocore").list_insert_unique(opts.filetypes, { "Avante" })
+        end,
+      },
+      {
+        -- support for image pasting
+        "HakonHarnes/img-clip.nvim",
+        event = "VeryLazy",
+        opts = {
+          -- recommended settings
+          default = {
+            embed_image_as_base64 = false,
+            prompt_for_file_name = false,
+            drag_and_drop = {
+              insert_mode = true,
+            },
+            -- required for Windows users
+            use_absolute_path = true,
+          },
+        },
+      },
       {
         "AstroNvim/astrocore",
         opts = function(_, opts)
@@ -218,36 +275,27 @@ return {
     },
     opts = {},
     specs = { -- configure optional plugins
-      { -- if copilot.lua is available, default to copilot provider
-        "zbirenbaum/copilot.lua",
-        optional = true,
-        specs = {
-          {
-            "yetone/avante.nvim",
-            opts = {
-              provider = "copilot",
-            },
-          },
-        },
-      },
-      {
-        -- make sure `Avante` is added as a filetype
-        "MeanderingProgrammer/render-markdown.nvim",
-        optional = true,
-        opts = function(_, opts)
-          if not opts.file_types then opts.filetypes = { "markdown" } end
-          opts.file_types = require("astrocore").list_insert_unique(opts.file_types, { "Avante" })
-        end,
-      },
-      {
-        -- make sure `Avante` is added as a filetype
-        "OXY2DEV/markview.nvim",
-        optional = true,
-        opts = function(_, opts)
-          if not opts.filetypes then opts.filetypes = { "markdown", "quarto", "rmd" } end
-          opts.filetypes = require("astrocore").list_insert_unique(opts.filetypes, { "Avante" })
-        end,
-      },
+      { "AstroNvim/astroui", opts = { icons = { Avante = "" } } },
     },
   },
+  -- This is a change to the autocomplete to make it borderless
+  -- {
+  --   "hrsh7th/nvim-cmp",
+  --   optional = true,
+  --   opts = function(_, opts)
+  --     -- local cmp = require "cmp"
+  --     opts.window = {
+  --       completion = { -- rounded border; thin-style scrollbar
+  --         border = nil,
+  --         scrollbar = "",
+  --       },
+  --       documentation = { -- no border; native-style scrollbar
+  --         border = nil,
+  --         scrollbar = "",
+  --         -- other options
+  --       },
+  --     }
+  --     -- opts.window = cmp.mapping.select_next_item()
+  --   end,
+  -- },
 }
