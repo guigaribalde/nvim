@@ -20,7 +20,7 @@ local previewers = require "telescope.previewers"
 local new_maker = function(filepath, bufnr, opts)
   opts = opts or {}
 
-  filepath = vim.fn.expand(filepath)
+  filepath = vim.fn.fnamemodify(filepath, ":p")
   vim.loop.fs_stat(filepath, function(_, stat)
     if not stat then return end
     if stat.size > 100000 then
@@ -33,6 +33,28 @@ end
 require("telescope").setup {
   defaults = {
     buffer_previewer_maker = new_maker,
+    path_display = function(_, path)
+      -- Convert absolute paths to relative
+      local cwd = vim.fn.getcwd() .. "/"
+      if path:sub(1, #cwd) == cwd then path = path:sub(#cwd + 1) end
+      local cols = vim.o.columns
+      local n
+      if cols < 120 then
+        n = 2
+      elseif cols < 180 then
+        n = 3
+      else
+        n = 4
+      end
+      local parts = {}
+      for part in string.gmatch(path, "[^/]+") do
+        table.insert(parts, part)
+      end
+      if #parts <= n * 2 then return path end
+      local head = table.concat(parts, "/", 1, n)
+      local tail = table.concat(parts, "/", #parts - n + 1)
+      return head .. "/.../" .. tail
+    end,
   },
 }
 
@@ -64,3 +86,5 @@ vim.opt.inccommand = "split"
 vim.opt.cursorline = true
 vim.opt.scrolloff = 10
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
+
+vim.cmd.colorscheme "tokyonight-night"

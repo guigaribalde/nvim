@@ -5,7 +5,7 @@ return {
     opts = {
       mappings = {
         n = {
-          ["<leader>fw"] = { function() require("telescope").extensions.live_grep_args.live_grep_args() end },
+          ["<leader>fw"] = { function() require("fff").live_grep() end, desc = "Find words" },
           ["<S-l>"] = { function() require("astrocore.buffer").nav(vim.v.count > 0 and vim.v.count or 1) end },
           ["<S-h>"] = { function() require("astrocore.buffer").nav(-(vim.v.count > 0 and vim.v.count or 1)) end },
           ["<leader>x"] = {
@@ -25,10 +25,15 @@ return {
           ["<leader>2"] = function() require("harpoon.ui").nav_file(2) end,
           ["<leader>3"] = function() require("harpoon.ui").nav_file(3) end,
           ["<leader>4"] = function() require("harpoon.ui").nav_file(4) end,
-          ["K"] = "<cmd>Lspsaga hover_doc<CR>",
-          ["gd"] = "<cmd>Lspsaga goto_definition<CR>",
-          ["gi"] = "<cmd>Lspsaga finder<CR>",
-
+          ["K"] = { function() vim.lsp.buf.hover() end, desc = "LSP hover" },
+          ["gd"] = { function() vim.lsp.buf.definition() end, desc = "Go to definition" },
+          ["gi"] = {
+            function() require("telescope.builtin").lsp_references { path_display = { "relative" } } end,
+            desc = "Find references",
+          },
+          ["<leader>r"] = { function() vim.lsp.buf.rename() end, desc = "LSP rename" },
+          ["<leader>gn"] = { function() vim.diagnostic.goto_next() end, desc = "Next diagnostic" },
+          ["<leader><S-k>"] = { function() vim.diagnostic.open_float() end, desc = "Show cursor diagnostics" },
           ["<leader>y"] = {
             function()
               -- local path = vim.fn.expand "%:p"
@@ -36,13 +41,14 @@ return {
               vim.fn.setreg("+", path)
             end,
           },
-          ["<leader>r"] = "<cmd>Lspsaga rename<CR>",
-          ["<leader>gn"] = "<cmd>Lspsaga diagnostic_jump_next<CR>",
-          ["<leader><S-k>"] = "<cmd>Lspsaga show_cursor_diagnostics<CR>",
           ["<C-j>"] = "<down>",
           ["<C-k>"] = "<up>",
           ["<leader>c"] = "",
           ["-"] = function() require("oil").open_float() end,
+          ["<leader>fl"] = {
+            function() vim.cmd("!biome check --write --unsafe " .. vim.fn.shellescape(vim.fn.expand "%:p")) end,
+            desc = "Biome format current file",
+          },
         },
         -- v = {
         --   ["J"] = { ":m '>+1<CR>gv=gv" },
@@ -62,10 +68,10 @@ return {
     opts = {
       mappings = {
         n = {
-          K = "<cmd>Lspsaga hover_doc<CR>",
-          gd = "<cmd>Lspsaga goto_definition<CR>",
-          ["<leader>r"] = "<cmd>Lspsaga rename<CR>",
-          ["<leader>fw"] = { function() require("telescope").extensions.live_grep_args.live_grep_args() end },
+          K = { function() vim.lsp.buf.hover() end, desc = "LSP hover" },
+          gd = { function() vim.lsp.buf.definition() end, desc = "Go to definition" },
+          ["<leader>r"] = { function() vim.lsp.buf.rename() end, desc = "LSP rename" },
+          ["<leader>fw"] = { function() require("fff").live_grep() end, desc = "Find words" },
           ["<leader>gc"] = {
             function()
               local previewers = require "telescope.previewers"

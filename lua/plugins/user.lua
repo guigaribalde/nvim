@@ -1,5 +1,7 @@
 ---@type LazySpec
 return {
+  -- Disable satellite.nvim due to conflict with buffer close
+  { "lewis6991/satellite.nvim", enabled = false },
   {
     "echasnovski/mini.move",
     keys = function(_, keys)
@@ -40,11 +42,34 @@ return {
       },
     },
   },
-  {
-    "nvim-telescope/telescope.nvim",
-    dependencies = { "nvim-telescope/telescope-live-grep-args.nvim" },
-    opts = function() require("telescope").load_extension "live_grep_args" end,
-  },
+  { "wakatime/vim-wakatime", lazy = false },
+  -- {
+  --   "fiqryq/wakastat.nvim",
+  --   event = "VeryLazy",
+  --   cmd = { "WakastatRefresh", "WakastatStatus" },
+  --   opts = {
+  --     args = { "--today" }, -- or "--week", "--month"
+  --     format = "Today Coding Time: %s", -- %s replaced with time
+  --     update_interval = 300, -- seconds between updates
+  --     enable_timer = true,
+  --   },
+  --   config = function(_, opts) require("wakastat").setup(opts) end,
+  --
+  --   specs = {
+  --     {
+  --       "rebelot/heirline.nvim",
+  --       optional = true,
+  --       opts = function(_, opts)
+  --         opts.statusline = opts.statusline or {}
+  --         table.insert(opts.statusline, 5, { -- insert at position 5
+  --           provider = function() return " " .. require("wakastat").status() .. " " end,
+  --           hl = "Wakastat",
+  --           update = { "User", pattern = "WakastatUpdated" },
+  --         })
+  --       end,
+  --     },
+  --   },
+  -- },
   {
     "ruifm/gitlinker.nvim",
     event = "VeryLazy",
@@ -76,28 +101,7 @@ return {
     opts = {},
     event = "VeryLazy",
   },
-  {
-    "nvimdev/lspsaga.nvim",
-    branch = "main",
-    config = function()
-      require("lspsaga").setup {
-        finder = {
-          keys = {
-            toggle_or_open = "<enter>",
-          },
-        },
-        ui = {
-          code_action = "",
-          enable = false,
-        },
-      }
-    end,
-    requires = {
-      { "nvim-tree/nvim-web-devicons" },
-      { "nvim-treesitter/nvim-treesitter" },
-    },
-    event = "User AstroFile",
-  },
+
   -- { import = "nvchad.blink.lazyspec" },
   -- {
   --   "supermaven-inc/supermaven-nvim",
@@ -372,60 +376,57 @@ return {
   --   end,
   -- },
   {
-    "epwalsh/obsidian.nvim",
-    version = "*",
-    event = { "BufReadPre  */obsidian-vault/*.md" },
-
+    "azabiong/vim-highlighter",
+    lazy = false, -- Not Lazy by default
     dependencies = {
-      "nvim-lua/plenary.nvim",
-      { "hrsh7th/nvim-cmp", optional = true },
-    },
-
-    opts = function(_, opts)
-      local astrocore = require "astrocore"
-      return astrocore.extend_tbl(opts, {
-        dir = vim.env.HOME .. "/obsidian-vault", -- specify the vault location. no need to call 'vim.fn.expand' here
-        use_advanced_uri = true,
-        finder = (astrocore.is_available "snacks.pick" and "snacks.pick")
-          or (astrocore.is_available "telescope.nvim" and "telescope.nvim")
-          or (astrocore.is_available "fzf-lua" and "fzf-lua")
-          or (astrocore.is_available "mini.pick" and "mini.pick"),
-
-        templates = {
-          subdir = "templates",
-          date_format = "%Y-%m-%d-%a",
-          time_format = "%H:%M",
-        },
-        daily_notes = {
-          folder = "daily",
-        },
-        completion = {
-          nvim_cmp = astrocore.is_available "nvim-cmp",
-          blink = astrocore.is_available "blink",
-        },
-        mappings = {
-          ["gd"] = {
-            action = function() return require("obsidian").util.smart_action() end,
-            opts = { noremap = false, expr = true, buffer = true },
+      {
+        "AstroNvim/astrocore",
+        opts = {
+          mappings = {
+            n = {
+              [">n"] = { "<Cmd>Hi><CR>", desc = "Next Recently Set Highlight" },
+              ["<n"] = { "<Cmd>Hi<<CR>", desc = "Previous Recently Set Highlight" },
+            },
           },
         },
-        note_frontmatter_func = function(note)
-          -- This is equivalent to the default frontmatter function.
-          local out = { id = note.id, aliases = note.aliases, tags = note.tags }
-          -- `note.metadata` contains any manually added fields in the frontmatter.
-          -- So here we just make sure those fields are kept in the frontmatter.
-          if note.metadata ~= nil and require("obsidian").util.table_length(note.metadata) > 0 then
-            for k, v in pairs(note.metadata) do
-              out[k] = v
-            end
-          end
-          return out
-        end,
-
-        -- Optional, by default when you use `:ObsidianFollowLink` on a link to an external
-        -- URL it will be ignored but you can customize this behavior here.
-        follow_url_func = vim.ui.open,
-      })
+      },
+    },
+  },
+  {
+    "dmtrKovalenko/fff.nvim",
+    build = function()
+      -- this will download prebuild binary or try to use existing rustup toolchain to build from source
+      -- (if you are using lazy you can use gb for rebuilding a plugin if needed)
+      require("fff.download").download_or_build_binary()
     end,
+    -- if you are using nixos
+    -- build = "nix run .#release",
+    opts = { -- (optional)
+      debug = {
+        enabled = true, -- we expect your collaboration at least during the beta
+        show_scores = true, -- to help us optimize the scoring system, feel free to share your scores!
+      },
+    },
+    -- No need to lazy-load with lazy.nvim.
+    -- This plugin initializes itself lazily.
+    lazy = false,
+    keys = {
+      {
+        "<leader>ff",
+        function() require("fff").find_files() end,
+        desc = "Find files",
+      },
+      {
+        "<leader>fw",
+        function()
+          require("fff").live_grep {
+            grep = {
+              modes = { "fuzzy", "plain", "regex" },
+            },
+          }
+        end,
+        desc = "Find words",
+      },
+    },
   },
 }
